@@ -4,7 +4,7 @@ import org.apache.crunch.PCollection;
 import org.apache.crunch.PTable;
 import org.apache.crunch.Pipeline;
 import org.apache.crunch.PipelineResult;
-import org.apache.crunch.impl.mr.MRPipeline;
+import org.apache.crunch.impl.spark.SparkPipeline;
 import org.apache.crunch.types.writable.Writables;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -36,7 +36,7 @@ public class WordCount extends Configured implements Tool {
         String outputPath = args[1];
 
         // Create an object to coordinate pipeline creation and execution.
-        Pipeline pipeline = new MRPipeline(WordCount.class, getConf());
+        Pipeline pipeline = new SparkPipeline("local", "sparktest");
 
         // Reference a given text file as a collection of Strings.
         PCollection<String> lines = pipeline.readTextFile(inputPath);

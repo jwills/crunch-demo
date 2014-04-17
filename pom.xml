@@ -34,6 +34,24 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.crunch</groupId>
+      <artifactId>crunch-spark</artifactId>
+      <version>0.9.0-hadoop2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.10</artifactId>
+      <version>0.9.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.10.2</version>
+    </dependency>
+
     <!-- The following libraries come with Hadoop but are missing from
          the client POM. You need them if you want to use LocalJobRunner
          from the IDE. If you don't you can safely delete them. -->
@@ -88,28 +106,17 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
         <configuration>
-          <descriptors>
-            <descriptor>src/main/assembly/hadoop-job.xml</descriptor>
-          </descriptors>
           <archive>
             <manifest>
               <mainClass>com.example.WordCount</mainClass>
             </manifest>
           </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
         </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
