@@ -23,6 +23,7 @@ public class StopWordFilter extends FilterFn<String> {
 
     @Override
     public boolean accept(String word) {
+        increment("stopwords", "count");
         return !STOP_WORDS.contains(word);
     }
 

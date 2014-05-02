@@ -12,6 +12,9 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import org.apache.spark.api.java.*;
+import org.apache.spark.api.java.function.*;
+import org.apache.spark.SparkConf;
 
 /**
  * A word count example for Apache Crunch, based on Crunch's example projects.
@@ -36,7 +39,9 @@ public class WordCount extends Configured implements Tool {
         String outputPath = args[1];
 
         // Create an object to coordinate pipeline creation and execution.
-        Pipeline pipeline = new SparkPipeline("local", "sparktest");
+        String master = getConf().get("spark.master", "local");
+        System.out.println("Connecting to spark at = " + master);
+        Pipeline pipeline = new SparkPipeline(master, "sparktest", WordCount.class);
 
         // Reference a given text file as a collection of Strings.
         PCollection<String> lines = pipeline.readTextFile(inputPath);
@@ -57,8 +62,9 @@ public class WordCount extends Configured implements Tool {
         pipeline.writeTextFile(counts, outputPath);
 
         // Execute the pipeline as a MapReduce.
-        PipelineResult result = pipeline.done();
-
-        return result.succeeded() ? 0 : 1;
+        PipelineResult res = pipeline.done();
+        System.out.println("Stopword count = " + 
+            res.getStageResults().get(0).getCounterValue("stopwords", "count"));
+        return res.succeeded() ? 0 : 1;
     }
 }
