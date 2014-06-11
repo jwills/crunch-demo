@@ -2,6 +2,7 @@ package com.example;
 
 import org.apache.crunch.PCollection;
 import org.apache.crunch.PTable;
+import org.apache.crunch.Pair;
 import org.apache.crunch.Pipeline;
 import org.apache.crunch.PipelineResult;
 import org.apache.crunch.impl.mr.MRPipeline;
@@ -55,6 +56,11 @@ public class WordCount extends Configured implements Tool {
 
         // Instruct the pipeline to write the resulting counts to a text file.
         pipeline.writeTextFile(counts, outputPath);
+
+        // Materialize and print the counts.
+        for (Pair<String, Long> cnt : counts.materialize()) {
+          System.out.println(cnt);
+        }
 
         // Execute the pipeline as a MapReduce.
         PipelineResult result = pipeline.done();
